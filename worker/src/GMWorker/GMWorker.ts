@@ -16,6 +16,7 @@ import { DBClient } from "../Database/DBClient"
 export enum Mode {
   SYNC = "sync",
   LOOP = "loop",
+  OFF = "off",
 }
 
 interface Stats {
@@ -74,6 +75,9 @@ export class GMWorker {
       }
 
       if (mode == Mode.SYNC) {
+        if (signature_list.length == 1) {
+          mode = Mode.OFF
+        }
         this.before_timestamp =
           signature_list[signature_list.length - 1].signature
       }
@@ -92,7 +96,7 @@ export class GMWorker {
       this.printStats(mode?.toString() ?? "none")
 
       await sleep(1000)
-    } while (mode)
+    } while (mode && mode != Mode.OFF)
   }
 
   private async get_signatures(
