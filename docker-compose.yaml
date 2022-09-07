@@ -22,6 +22,21 @@ services:
       MONGOCOL: trades_v1
       MONGODB: js_trades
       MONGOURL: mongodb://root:example@mongo:27017
+      RUNMODE: loop
+      TXLIMIT: 50
+      PORGRESS: false
+
+  worker_sync:
+    build:
+      context: worker/
+      dockerfile: DOCKERFILE
+    restart: always
+    links:
+      - mongo
+    environment:
+      MONGOCOL: trades_v1
+      MONGODB: js_trades
+      MONGOURL: mongodb://root:example@mongo:27017
       RUNMODE: sync
       TXLIMIT: 50
-      PORGRESS: flase
+      PORGRESS: false
