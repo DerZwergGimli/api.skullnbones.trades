@@ -79,7 +79,7 @@ export class GMWorker {
           mode = Mode.OFF
         }
         this.before_timestamp =
-          signature_list[signature_list.length - 1].signature
+          signature_list[signature_list.length - 1].signature ?? undefined
       }
 
       transaction_list = this.filter_transactions(transaction_list)
