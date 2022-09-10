@@ -1,5 +1,6 @@
 import { GMWorker, Mode } from "./GMWorker/GMWorker"
 import { DBClient } from "./Database/DBClient"
+import "log-timestamp"
 
 console.log("--- Worker Starting ---")
 

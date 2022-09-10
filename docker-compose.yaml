@@ -25,6 +25,11 @@ services:
       RUNMODE: loop
       TXLIMIT: 50
       PORGRESS: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
 
   worker_sync:
     build:
@@ -40,3 +45,7 @@ services:
       RUNMODE: sync
       TXLIMIT: 50
       PORGRESS: false
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"

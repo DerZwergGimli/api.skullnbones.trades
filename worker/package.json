@@ -22,6 +22,7 @@
   "dependencies": {
     "@solana/web3.js": "^1.59.0",
     "dotenv": "^16.0.2",
+    "log-timestamp": "^0.3.0",
     "mongodb": "^4.9.1"
   }
 }
