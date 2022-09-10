@@ -78,8 +78,14 @@ export class GMWorker {
         if (signature_list.length <= 1) {
           mode = Mode.OFF
         }
-        this.before_timestamp =
-          signature_list[signature_list.length - 1].signature ?? undefined
+        if (
+          signature_list[signature_list.length - 1]?.signature !== undefined
+        ) {
+          this.before_timestamp =
+            signature_list[signature_list.length - 1]?.signature
+        } else {
+          mode = Mode.OFF
+        }
       }
 
       transaction_list = this.filter_transactions(transaction_list)
@@ -97,6 +103,7 @@ export class GMWorker {
 
       await sleep(1000)
     } while (mode && mode != Mode.OFF)
+    console.log("Mode has been switched to OFF")
   }
 
   private async get_signatures(
