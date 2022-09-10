@@ -1,0 +1,478 @@
+openapi: 3.0.0
+servers:
+  # Servers
+  - description: API V2 Endpoint
+    url: https://api.skullnbones.xyz/v2
+info:
+  description: This is the Skull&Bones Trades API V2
+  version: 1.0.0
+  title: S&B - StarAtlas Trades API
+  contact:
+    email: skullandbonesdao@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: UDF
+    description: UDF Compatible API Calls
+paths:
+  /:
+    get:
+      tags:
+        - UDF
+      summary: status
+      operationId: getStatus
+      description: |
+        Gets a status message
+      responses:
+        '200':
+          description: status message resutlt
+          content:
+            application/json:
+              schema:
+                type: string
+                items:
+                  $ref: '#/components/schemas/StatusItem'
+        '400':
+          description: error
+        '404':
+          description: not found
+  /time:
+    get:
+      tags:
+        - UDF
+      summary: time
+      operationId: getTime
+      description: |
+        Gets server time
+      responses:
+        '200':
+          description: time message resutlt
+          content:
+            text/plain:
+              schema:
+                type: number
+                example: 1662761714
+        '400':
+          description: error
+        '404':
+          description: not found
+  /config:
+    get:
+      tags:
+        - UDF
+      summary: config
+      operationId: getConfig
+      description: |
+        Gets a config message
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+        '400':
+          description: error
+        '404':
+          description: not found
+  /symbol_info:
+    get:
+      tags:
+        - UDF
+      summary: symbol into
+      operationId: geSymbolInfo
+      description: |
+        Gets a symbols info message
+      responses:
+        '200':
+          description: returns symbols info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SymbolInfo'
+        '400':
+          description: error
+        '404':
+          description: not found
+  /symbols:
+    get:
+      tags:
+        - UDF
+      summary: symbol into
+      operationId: geSymbol
+      description: |
+        Gets a symbol info message
+      parameters:
+        - in: query
+          name: symbol
+          description: trading pair symbol
+          schema:
+            type: string
+      responses:
+        '200':
+          description: returns symbol info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Symbol'
+        '400':
+          description: error
+        '404':
+          description: not found
+  /search:
+    get:
+      tags:
+        - UDF
+      summary: symbol into
+      operationId: geSearchSymbol
+      description: |
+        Gets a symbol info message
+      parameters:
+        - in: query
+          name: symbol
+          description: trading pair symbol
+          schema:
+            type: string
+      responses:
+        '200':
+          description: returns symbol info
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchSymbol'
+        '400':
+          description: error
+        '404':
+          description: not found
+  /history:
+    get:
+      tags:
+        - UDF
+      summary: history object
+      operationId: geHistoryElement
+      description: |
+        Gets a symbol info message
+      parameters:
+        - in: query
+          name: symbol
+          description: trading pair symbol
+          schema:
+            type: string
+        - in: query
+          name: from
+          description: timestamp from
+          schema:
+            type: number
+        - in: query
+          name: to
+          description: timestamp to
+          schema:
+            type: number
+        - in: query
+          name: resolution
+          description: time resolution
+          schema:
+            type: number
+      responses:
+        '200':
+          description: returns symbol info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryElement'
+        '400':
+          description: error
+        '404':
+          description: not found
+
+components:
+  schemas:
+
+    Config:
+      required:
+        - exchnages
+      properties:
+        exchanges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exchange'
+        symbols_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/SymbolsType'
+        supported_resolutions:
+          type: array
+          items:
+            type: string
+            example: 1D
+        homePage:
+          type: string
+          format: url
+          example: 'https://www.acme-corp.com'
+        supports_search:
+          type: boolean
+          example: true
+        supports_group_request:
+          type: boolean
+          example: false
+        supports_marks:
+          type: boolean
+          example: false
+        supports_timescale_marks:
+          type: boolean
+          example: false
+        supports_time:
+          type: boolean
+          example: true
+      type: object
+
+    SymbolInfo:
+      properties:
+        symbol:
+          type: array
+          items:
+            type: string
+            example: PX4ATLAS
+        ticker:
+          type: array
+          items:
+            type: string
+            example: PX4ATLAS
+        name:
+          type: array
+          items:
+            type: string
+            example: PX4ATLAS
+        full_name:
+          type: array
+          items:
+            type: string
+            example: PX4ATLAS
+        description:
+          type: array
+          items:
+            type: string
+            example: PX4 ATLAS
+        exchange:
+          type: string
+          example: SA
+        listed_exchange:
+          type: string
+          example: SA
+        type:
+          type: string
+          example: crypto
+        currency_code:
+          type: array
+          items:
+            type: string
+            example: BTC
+        session:
+          type: string
+          example: 24x7
+        timezone:
+          type: string
+          example: UTC
+        minmovement:
+          type: number
+          example: 1
+        minmov:
+          type: number
+          example: 1
+        minmovement2:
+          type: number
+          example: 0
+        minmov2:
+          type: number
+          example: 0
+        pricescale:
+          type: array
+          items:
+            type: number
+            example: 100
+        supported_resolutions:
+          type: array
+          items:
+            type: string
+            example: 1
+        has_intraday:
+          type: boolean
+          example: true
+        has_daily:
+          type: boolean
+          example: true
+        has_weekly_and_monthly:
+          type: number
+          example: true
+        data_status:
+          type: string
+          example: streaming
+      type: object
+
+    Symbol:
+      properties:
+        symbol:
+          type: string
+          example: PX4ATLAS
+        ticker:
+          type: string
+          example: PX4ATLAS
+        name:
+          type: string
+          example: PX4ATLAS
+        full_name:
+          type: string
+          example: PX4ATLAS
+        description:
+          type: string
+          example: PX4 ATLAS
+        exchange:
+          type: string
+          example: SA
+        listed_exchange:
+          type: string
+          example: SA
+        type:
+          type: string
+          example: crypto
+        currency_code:
+          type: string
+          example: BTC
+        session:
+          type: string
+          example: 24x7
+        timezone:
+          type: string
+          example: UTC
+        minmovement:
+          type: number
+          example: 1
+        minmov:
+          type: number
+          example: 1
+        minmovement2:
+          type: number
+          example: 0
+        minmov2:
+          type: number
+          example: 0
+        pricescale:
+          type: array
+          items:
+            type: number
+            example: 100
+        supported_resolutions:
+          type: array
+          items:
+            type: string
+            example: 1
+        has_intraday:
+          type: boolean
+          example: true
+        has_daily:
+          type: boolean
+          example: true
+        has_weekly_and_monthly:
+          type: number
+          example: true
+        data_status:
+          type: string
+          example: streaming
+      type: object
+
+    SearchSymbol:
+      properties:
+        symbol:
+          type: string
+          example: PX4ATLAS
+        full_name:
+          type: string
+          example: PX4ATLAS
+        description:
+          type: string
+          example: PX4 ATLAS
+        exchange:
+          type: string
+          example: SA
+        ticker:
+          type: string
+          example: PX4ATLAS
+        type:
+          type: string
+          example: crypto
+      type: object
+
+    HistoryElement:
+      properties:
+        s:
+          type: string
+          example: ok
+        t:
+          type: array
+          items:
+            type: number
+            example: 12322121
+        c:
+          type: array
+          items:
+            type: number
+            example: 12322121
+        o:
+          type: array
+          items:
+            type: number
+            example: 12322121
+        h:
+          type: array
+          items:
+            type: number
+            example: 12322121
+        l:
+          type: array
+          items:
+            type: number
+            example: 12322121
+        v:
+          type: array
+          items:
+            type: number
+            example: 12322121
+      type: object
+
+    Exchange:
+      required:
+        - exchange
+      properties:
+        value:
+          type: string
+          example: SA
+        name:
+          type: string
+          example: StarAtlas
+        desc:
+          type: string
+          example: StarAtlas Exch
+      type: object
+
+    SymbolsType:
+      properties:
+        value:
+          type: string
+          example: crypto
+        name:
+          type: string
+          example: Cryptocurrency
+      type: object
+
+    StatusItem:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          example: Weclome to S&B StarAtlas Trades API
+      description: Simple status string

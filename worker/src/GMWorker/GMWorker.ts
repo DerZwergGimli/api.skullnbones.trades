@@ -75,7 +75,7 @@ export class GMWorker {
       }
 
       if (mode == Mode.SYNC) {
-        if (signature_list.length == 1) {
+        if (signature_list.length <= 1) {
           mode = Mode.OFF
         }
         this.before_timestamp =
@@ -114,11 +114,16 @@ export class GMWorker {
 
   private get_transactions(
     signature: ConfirmedSignatureInfo
-  ): Promise<ParsedTransactionWithMeta | null> {
-    return this.connection.getParsedTransaction(
-      signature.signature,
-      "finalized"
-    )
+  ): Promise<ParsedTransactionWithMeta | null> | null {
+    try {
+      return this.connection.getParsedTransaction(
+        signature.signature,
+        "finalized"
+      )
+    } catch (e) {
+      console.error(e)
+    }
+    return null
   }
 
   private filter_transactions(
