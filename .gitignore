@@ -1,3 +1,6 @@
 /worker/build/
 /api/gen/node_modules/
 /worker/node_modules/
+/api_v2/build/
+/api_v2/node_modules
+/snapshot/
