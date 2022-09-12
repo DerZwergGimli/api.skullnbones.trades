@@ -1,13 +1,32 @@
 import { SymbolInfo } from "../interfaces/symbolInfoInterface";
 import * as symbol_file from "../constant/searchSymbol.json";
+import localStoreInstance from "../adapters/LocalStoreAdapter";
 
-export class UDFService {
-  public base(): string {
-    return "Welcome to the Skull&Bones API with UDF-Support";
-  }
-
-  public time(): number {
-    return Math.floor(Date.now() / 1000);
+export class UDFSymbolService {
+  public symbol_info(): SymbolInfo {
+    return {
+      currency_code: localStoreInstance.symbols,
+      data_status: localStoreInstance.data_status,
+      description: localStoreInstance.get_currency_codes(),
+      exchange: localStoreInstance.exchange,
+      full_name: localStoreInstance.get_currency_codes(),
+      has_daily: localStoreInstance.has_daily,
+      has_intraday: localStoreInstance.has_intraday,
+      has_weekly_and_monthly: localStoreInstance.has_weekly_and_monthly,
+      listed_exchange: localStoreInstance.exchange,
+      minmov: localStoreInstance.minmov,
+      minmov2: localStoreInstance.minmov2,
+      minmovement: localStoreInstance.minmovement,
+      minmovement2: localStoreInstance.minmovement2,
+      name: localStoreInstance.get_currency_codes(),
+      pricescale: localStoreInstance.get_pricescale(),
+      session: localStoreInstance.session,
+      supported_resolutions: localStoreInstance.supported_resolutions,
+      symbol: localStoreInstance.get_currency_codes(),
+      ticker: localStoreInstance.get_currency_codes(),
+      timezone: localStoreInstance.timezone,
+      type: localStoreInstance.type,
+    };
   }
 
   public symbols(search_symbol: string): SymbolInfo {

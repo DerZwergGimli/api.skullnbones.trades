@@ -27,13 +27,10 @@ exports.UDFService = void 0;
 const symbol_file = __importStar(require("../constant/searchSymbol.json"));
 class UDFService {
     base() {
-        return "Working";
+        return "Welcome to the Skull&Bones API with UDF-Support";
     }
     time() {
         return Math.floor(Date.now() / 1000);
-    }
-    symbol_info() {
-        return symbol_file;
     }
     symbols(search_symbol) {
         let symbolInfo = symbol_file;
