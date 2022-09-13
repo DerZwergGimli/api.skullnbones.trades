@@ -11,4 +11,5 @@ COPY . .
 
 RUN tsc
 
-CMD ["node", "./build/index.ts"]
+
+CMD ["node", "./build/index.js"]

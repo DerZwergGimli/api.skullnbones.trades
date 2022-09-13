@@ -4,3 +4,5 @@
 /api_v2/build/
 /api_v2/node_modules
 /snapshot/
+/worker/package-lock.json
+/worker/yarn.lock
