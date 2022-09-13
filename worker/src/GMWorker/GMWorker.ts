@@ -121,7 +121,6 @@ export class GMWorker {
       )
     } catch (error) {
       console.log("SIGN")
-      console.log(error)
     }
   }
 
@@ -134,8 +133,8 @@ export class GMWorker {
         "finalized"
       )
     } catch (error) {
-      console.log("TRANS")
       console.error(error)
+      console.log("TRANS")
     }
     return null
   }
