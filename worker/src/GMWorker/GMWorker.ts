@@ -62,11 +62,10 @@ export class GMWorker {
           this.progress_bar.start(this.stats.fetched_transactions, 0)
         }
         for (const signature of signature_list) {
-          let transaction = await this.get_transactions(signature)
+          let transaction = await this.get_transaction(signature)
           if (transaction !== null) {
             transaction_list.push(transaction)
-          }
-          else {
+          } else {
             console.log("transaction is null")
           }
           if (process.env.PORGRESS == "true") {
@@ -114,6 +113,7 @@ export class GMWorker {
   private async get_signatures(
     before: string | undefined
   ): Promise<ConfirmedSignatureInfo[] | null> {
+    console.log("get_signatures")
     try {
       return await this.connection.getSignaturesForAddress(
         new PublicKey(this.program_id),
@@ -124,24 +124,19 @@ export class GMWorker {
         "finalized"
       )
     } catch (error) {
-      console.log("SIGN")
+      console.log(error)
     }
     return null
   }
 
-  private get_transactions(
+  private get_transaction(
     signature: ConfirmedSignatureInfo
   ): Promise<ParsedTransactionWithMeta | null> | null {
-    try {
-      return this.connection.getParsedTransaction(
-        signature.signature,
-        "finalized"
-      )
-    } catch (error) {
-      console.error(error)
-      console.log("TRANS")
-    }
-    return null
+    console.log("get_transaction")
+    return this.connection.getParsedTransaction(
+      signature.signature,
+      "finalized"
+    )
   }
 
   private filter_transactions(
