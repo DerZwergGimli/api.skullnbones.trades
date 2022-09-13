@@ -63,6 +63,7 @@ export class GMWorker {
         }
         for (const signature of signature_list) {
           let transaction = await this.get_transaction(signature)
+          console.log("got_transaction")
           if (transaction !== null) {
             transaction_list.push(transaction)
           } else {
