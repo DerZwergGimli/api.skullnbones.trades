@@ -1,6 +1,6 @@
-import { Config } from "../interfaces/configInterface";
-import { SymbolInterface } from "../interfaces/symbolInfoInterface";
 import localStoreInstance from "../adapters/LocalStoreAdapter";
+import { SymbolAdapter } from "../adapters/SymbolAdapter";
+import { UdfCompatibleConfiguration } from "../interfaces/DatafeedUDFCompatibleInterfaces";
 
 export class UDFService {
   public base(): string {
@@ -11,8 +11,8 @@ export class UDFService {
     return Math.floor(Date.now() / 1000);
   }
 
-  public config(): Config {
-    let localSymbols = new SymbolInterface(localStoreInstance.symbols);
+  public config(): UdfCompatibleConfiguration {
+    let localSymbols = new SymbolAdapter(localStoreInstance.symbols);
     return localSymbols.get_config();
   }
 }

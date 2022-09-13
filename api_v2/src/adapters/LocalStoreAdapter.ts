@@ -1,4 +1,4 @@
-import { StarAtlasAPI } from "../interfaces/staratlasapi";
+import { StarAtlasAPI } from "../interfaces/StarAtlasAPI";
 import { STARATLASAPIURL } from "../constant/staratlasapi";
 import { AxiosResponse } from "axios";
 

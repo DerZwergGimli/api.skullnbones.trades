@@ -1,32 +1,35 @@
-import { SymbolInfo, SymbolInterface } from "../interfaces/symbolInfoInterface";
 import localStoreInstance from "../adapters/LocalStoreAdapter";
-import { SymbolDetail } from "../interfaces/SymbolDetail";
-import { TradeHistory } from "../interfaces/RootObject";
-import { SymbolSearch } from "../interfaces/symbolSearchInterface";
+import { TradeHistory } from "../interfaces/DatafeedUDFCompatibleTradeInterface";
+import { SymbolAdapter } from "../adapters/SymbolAdapter";
+import {
+  UdfErrorResponse,
+  UdfSearchSymbolsResponse,
+} from "../interfaces/DatafeedUDFCompatibleInterfaces";
+import { LibrarySymbolInfo } from "../interfaces/DatafeedInterfaces";
 
 export class UDFSymbolService {
-  public symbol_info(): SymbolInfo {
-    let localSymbols = new SymbolInterface(localStoreInstance.symbols);
+  public symbol_info(): LibrarySymbolInfo {
+    let localSymbols = new SymbolAdapter(localStoreInstance.symbols);
 
     return localSymbols.get_parsed();
   }
 
-  public symbols(search_symbol: string): SymbolDetail {
+  public symbols(search_symbol: string): LibrarySymbolInfo {
     console.log(search_symbol);
 
-    let localSymbols = new SymbolInterface(localStoreInstance.symbols);
+    let localSymbols = new SymbolAdapter(localStoreInstance.symbols);
     localSymbols.search_symbols(search_symbol);
 
-    return localSymbols.get_details();
+    return localSymbols.get_parsed();
   }
 
-  public search(
+  public searchSymbols(
     query: string,
     limit: number,
     type?: string,
     exchange?: string
-  ): SymbolSearch[] {
-    let localSymbols = new SymbolInterface(localStoreInstance.symbols);
+  ): UdfSearchSymbolsResponse | UdfErrorResponse[] {
+    let localSymbols = new SymbolAdapter(localStoreInstance.symbols);
     localSymbols.search_symbols_adv(query, limit, type, exchange);
 
     return localSymbols.get_searched();

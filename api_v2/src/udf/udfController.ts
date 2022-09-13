@@ -1,10 +1,13 @@
 import { Controller, Get, Query, Route, Tags } from "tsoa";
 import { UDFService } from "./udfService";
-import { SymbolInfo } from "../interfaces/symbolInfoInterface";
 import { UDFSymbolService } from "./udfSymbolService";
-import { Config } from "../interfaces/configInterface";
-import { TradeHistory } from "../interfaces/RootObject";
-import { SymbolSearch } from "../interfaces/symbolSearchInterface";
+import { TradeHistory } from "../interfaces/DatafeedUDFCompatibleTradeInterface";
+import {
+  UdfCompatibleConfiguration,
+  UdfErrorResponse,
+  UdfSearchSymbolsResponse,
+} from "../interfaces/DatafeedUDFCompatibleInterfaces";
+import { LibrarySymbolInfo } from "../interfaces/DatafeedInterfaces";
 
 @Route("")
 @Tags("UDF")
@@ -29,7 +32,7 @@ export class UDFController extends Controller {
    * Retrieves a config form the server for UDF.
    */
   @Get("config")
-  public async config(): Promise<Config> {
+  public async config(): Promise<UdfCompatibleConfiguration> {
     return new UDFService().config();
   }
 
@@ -37,7 +40,7 @@ export class UDFController extends Controller {
    * Retrieves a symbol-info object containing all symbols.
    */
   @Get("symbol_info")
-  public async symbol_info(): Promise<SymbolInfo> {
+  public async symbol_info(@Query() group: string): Promise<LibrarySymbolInfo> {
     return new UDFSymbolService().symbol_info();
   }
 
@@ -45,7 +48,7 @@ export class UDFController extends Controller {
    * Retrieves a symbol-info object containing searched symbols.
    */
   @Get("symbols")
-  public async symbols(@Query() symbol: string): Promise<SymbolSearch> {
+  public async symbols(@Query() symbol: string): Promise<LibrarySymbolInfo> {
     return new UDFSymbolService().symbols(symbol);
   }
 
@@ -58,8 +61,8 @@ export class UDFController extends Controller {
     @Query() limit: number,
     @Query() type?: string,
     @Query() exchange?: string
-  ): Promise<SymbolSearch[]> {
-    return new UDFSymbolService().search(query, limit, type, exchange);
+  ): Promise<UdfSearchSymbolsResponse | UdfErrorResponse[]> {
+    return new UDFSymbolService().searchSymbols(query, limit, type, exchange);
   }
 
   /**

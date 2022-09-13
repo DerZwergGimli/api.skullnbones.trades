@@ -35,7 +35,7 @@ let UDFController = class UDFController extends tsoa_1.Controller {
     /**
      * Retrieves a symbol-info object containing all symbols.
      */
-    async symbol_info() {
+    async symbol_info(group) {
         return new udfSymbolService_1.UDFSymbolService().symbol_info();
     }
     /**
@@ -48,7 +48,7 @@ let UDFController = class UDFController extends tsoa_1.Controller {
      * Retrieves a symbol-info object searched (advanced) all symbols.
      */
     async search(query, limit, type, exchange) {
-        return new udfSymbolService_1.UDFSymbolService().search(query, limit, type, exchange);
+        return new udfSymbolService_1.UDFSymbolService().searchSymbols(query, limit, type, exchange);
     }
     /**
      * Retrieves a symbol-info object searched (advanced) all symbols.
@@ -67,7 +67,8 @@ __decorate([
     (0, tsoa_1.Get)("config")
 ], UDFController.prototype, "config", null);
 __decorate([
-    (0, tsoa_1.Get)("symbol_info")
+    (0, tsoa_1.Get)("symbol_info"),
+    __param(0, (0, tsoa_1.Query)())
 ], UDFController.prototype, "symbol_info", null);
 __decorate([
     (0, tsoa_1.Get)("symbols"),

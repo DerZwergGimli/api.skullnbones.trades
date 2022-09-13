@@ -1,32 +1,13 @@
-import { Config } from "./configInterface";
-import { SymbolDetail } from "./SymbolDetail";
-import { SymbolSearch } from "./symbolSearchInterface";
+import {
+  UdfCompatibleConfiguration,
+  UdfSearchSymbolsResponse,
+} from "../interfaces/DatafeedUDFCompatibleInterfaces";
+import {
+  LibrarySymbolInfo,
+  ResolutionString,
+} from "../interfaces/DatafeedInterfaces";
 
-export interface SymbolInfo {
-  symbol: string[];
-  ticker: string[];
-  name: string[];
-  full_name: string[];
-  description: string[];
-  exchange: string;
-  listed_exchange: string;
-  type: string;
-  currency_code: string[];
-  session: string;
-  timezone: string;
-  minmovement: number;
-  minmov: number;
-  minmovement2: number;
-  minmov2: number;
-  pricescale: number[];
-  supported_resolutions: string[];
-  has_intraday: boolean;
-  has_daily: boolean;
-  has_weekly_and_monthly: boolean;
-  data_status: string;
-}
-
-export class SymbolInterface {
+export class SymbolAdapter {
   public symbols: string[] = [];
   public exchange = "GalacticMarketplace";
   public type = "NFT";
@@ -36,21 +17,14 @@ export class SymbolInterface {
   public minmovement = 0;
   public minmovement2 = 0;
   public supported_resolutions = [
-    "1",
-    "3",
-    "5",
-    "15",
-    "30",
-    "60",
-    "120",
-    "240",
-    "360",
-    "480",
-    "720",
-    "1D",
-    "3D",
-    "1W",
-    "1M",
+    "1" as ResolutionString,
+    "5" as ResolutionString,
+    "15" as ResolutionString,
+    "30" as ResolutionString,
+    "60" as ResolutionString,
+    "1D" as ResolutionString,
+    "1W" as ResolutionString,
+    "1M" as ResolutionString,
   ];
   public has_intraday = true;
   public has_daily = true;
@@ -129,80 +103,53 @@ export class SymbolInterface {
     this.symbols.splice(limit);
   }
 
-  public get_details(): SymbolDetail {
+  public get_parsed(): LibrarySymbolInfo {
     return {
-      currency_code: this.symbols[0],
-      data_status: this.data_status,
+      format: "price",
+      currency_code: "USDC",
+      data_status: "streaming",
       description: this.get_description()[0],
       exchange: this.exchange,
       full_name: this.get_currency_codes()[0],
-      has_daily: this.has_daily,
+      has_daily: false,
       has_intraday: this.has_intraday,
       has_weekly_and_monthly: this.has_weekly_and_monthly,
       listed_exchange: this.exchange,
       minmov: this.minmov,
-      minmov2: this.minmov2,
-      minmovement: this.minmovement,
-      minmovement2: this.minmovement2,
-      name: this.get_currency_codes()[0],
-      pricescale: this.get_pricescale()[0] ?? 100,
+      name: this.symbols[0],
+      pricescale: this.get_pricescale()[0],
       session: this.session,
       supported_resolutions: this.supported_resolutions,
-      symbol: this.get_currency_codes()[0],
       ticker: this.get_currency_codes()[0],
-      timezone: this.timezone,
+      timezone: "Etc/UTC",
       type: this.type,
     };
   }
 
-  public get_parsed(): SymbolInfo {
-    return {
-      currency_code: this.symbols,
-      data_status: this.data_status,
-      description: this.get_description(),
-      exchange: this.exchange,
-      full_name: this.get_currency_codes(),
-      has_daily: this.has_daily,
-      has_intraday: this.has_intraday,
-      has_weekly_and_monthly: this.has_weekly_and_monthly,
-      listed_exchange: this.exchange,
-      minmov: this.minmov,
-      minmov2: this.minmov2,
-      minmovement: this.minmovement,
-      minmovement2: this.minmovement2,
-      name: this.get_currency_codes(),
-      pricescale: this.get_pricescale(),
-      session: this.session,
-      supported_resolutions: this.supported_resolutions,
-      symbol: this.get_currency_codes(),
-      ticker: this.get_currency_codes(),
-      timezone: this.timezone,
-      type: this.type,
-    };
-  }
+  public get_searched(): UdfSearchSymbolsResponse {
+    const symbolSearch: UdfSearchSymbolsResponse = [];
 
-  public get_searched(): SymbolSearch[] {
-    const symbolSearch: SymbolSearch[] = [];
-    this.symbols.forEach((symbol) => {
+    for (const [index, value] of this.symbols.entries()) {
       symbolSearch.push({
-        description: this.get_description()[0],
+        description: this.get_description()[index],
         exchange: this.exchange,
-        full_name: symbol + "USDC",
-        symbol: symbol,
+        full_name: value + "/USDC",
+        symbol: value,
+        ticker: "",
         type: this.type,
       });
-    });
+    }
 
     return symbolSearch;
   }
 
-  public get_config(): Config {
+  public get_config(): UdfCompatibleConfiguration {
     return {
       exchanges: [{ value: this.exchange, name: "AAA", desc: "AAAAA" }],
       supported_resolutions: this.supported_resolutions,
-      supports_group_request: false,
-      supports_marks: false,
       supports_search: this.supports_search,
+      supports_marks: false,
+      currency_codes: this.get_currency_codes(),
       supports_time: true,
       supports_timescale_marks: false,
       symbols_types: [{ value: this.type, name: "nfts" }],
