@@ -1,6 +1,7 @@
 import {
   ConfirmedSignatureInfo,
   Connection,
+  ConnectionConfig,
   ParsedTransactionWithMeta,
   PublicKey,
 } from "@solana/web3.js"
@@ -12,6 +13,21 @@ import * as db from "../structs/db/db_entry"
 import { DBEntry } from "../structs/db/db_entry"
 import { sleep } from "../helper/Loop"
 import { DBClient } from "../Database/DBClient"
+
+import cf from "cross-fetch"
+import fetchBuilder from "fetch-retry-ts"
+
+const options = {
+  retries: 3,
+  retryDelay: 1000,
+  retryOn: [419, 503, 504],
+}
+
+const fetch = fetchBuilder(cf, options)
+const CONNECTION_CONFIG: ConnectionConfig = {
+  commitment: "confirmed",
+  fetch: fetch,
+}
 
 export enum Mode {
   SYNC = "sync",
@@ -37,7 +53,7 @@ export class GMWorker {
   }
 
   public constructor() {
-    this.connection = new Connection(SOLANRPC)
+    this.connection = new Connection(SOLANRPC, CONNECTION_CONFIG)
     this.progress_bar = new cliProgress.SingleBar(
       {},
       cliProgress.Presets.shades_classic
