@@ -9,7 +9,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UDFController_search = exports.UDFController = void 0;
+exports.UDFController = void 0;
 const tsoa_1 = require("tsoa");
 const udfService_1 = require("./udfService");
 const udfSymbolService_1 = require("./udfSymbolService");
@@ -27,6 +27,12 @@ let UDFController = class UDFController extends tsoa_1.Controller {
         return new udfService_1.UDFService().time();
     }
     /**
+     * Retrieves a config form the server for UDF.
+     */
+    async config() {
+        return new udfService_1.UDFService().config();
+    }
+    /**
      * Retrieves a symbol-info object containing all symbols.
      */
     async symbol_info() {
@@ -36,7 +42,19 @@ let UDFController = class UDFController extends tsoa_1.Controller {
      * Retrieves a symbol-info object containing searched symbols.
      */
     async symbols(symbol) {
-        return new udfService_1.UDFService().symbols(symbol);
+        return new udfSymbolService_1.UDFSymbolService().symbols(symbol);
+    }
+    /**
+     * Retrieves a symbol-info object searched (advanced) all symbols.
+     */
+    async search(query, limit, type, exchange) {
+        return new udfSymbolService_1.UDFSymbolService().search(query, limit, type, exchange);
+    }
+    /**
+     * Retrieves a symbol-info object searched (advanced) all symbols.
+     */
+    async history(symbol, resolution, from, to, countback, currencyCode) {
+        return new udfSymbolService_1.UDFSymbolService().history(symbol, from, to, resolution);
     }
 };
 __decorate([
@@ -46,34 +64,33 @@ __decorate([
     (0, tsoa_1.Get)("time")
 ], UDFController.prototype, "time", null);
 __decorate([
+    (0, tsoa_1.Get)("config")
+], UDFController.prototype, "config", null);
+__decorate([
     (0, tsoa_1.Get)("symbol_info")
 ], UDFController.prototype, "symbol_info", null);
 __decorate([
     (0, tsoa_1.Get)("symbols"),
     __param(0, (0, tsoa_1.Query)())
 ], UDFController.prototype, "symbols", null);
+__decorate([
+    (0, tsoa_1.Get)("search"),
+    __param(0, (0, tsoa_1.Query)()),
+    __param(1, (0, tsoa_1.Query)()),
+    __param(2, (0, tsoa_1.Query)()),
+    __param(3, (0, tsoa_1.Query)())
+], UDFController.prototype, "search", null);
+__decorate([
+    (0, tsoa_1.Get)("history"),
+    __param(0, (0, tsoa_1.Query)()),
+    __param(1, (0, tsoa_1.Query)()),
+    __param(2, (0, tsoa_1.Query)()),
+    __param(3, (0, tsoa_1.Query)()),
+    __param(4, (0, tsoa_1.Query)()),
+    __param(5, (0, tsoa_1.Query)())
+], UDFController.prototype, "history", null);
 UDFController = __decorate([
     (0, tsoa_1.Route)(""),
     (0, tsoa_1.Tags)("UDF")
 ], UDFController);
 exports.UDFController = UDFController;
-let UDFController_search = class UDFController_search extends tsoa_1.Controller {
-    /**
-     * Retrieves a symbol-info object searched (advanced) all symbols.
-     */
-    async search(query, limit, type, exchange) {
-        return new udfService_1.UDFService().search(query, limit, type, exchange);
-    }
-};
-__decorate([
-    (0, tsoa_1.Get)(),
-    __param(0, (0, tsoa_1.Query)()),
-    __param(1, (0, tsoa_1.Query)()),
-    __param(2, (0, tsoa_1.Query)()),
-    __param(3, (0, tsoa_1.Query)())
-], UDFController_search.prototype, "search", null);
-UDFController_search = __decorate([
-    (0, tsoa_1.Route)("search"),
-    (0, tsoa_1.Tags)("UDF")
-], UDFController_search);
-exports.UDFController_search = UDFController_search;
