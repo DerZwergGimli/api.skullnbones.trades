@@ -66,6 +66,9 @@ export class GMWorker {
           if (transaction !== null) {
             transaction_list.push(transaction)
           }
+          else {
+            console.log("transaction is null")
+          }
           if (process.env.PORGRESS == "true") {
             this.progress_bar.increment()
           }
