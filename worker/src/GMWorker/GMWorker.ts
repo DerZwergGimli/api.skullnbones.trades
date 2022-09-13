@@ -54,53 +54,54 @@ export class GMWorker {
 
       let signature_list = await this.get_signatures(this.before_timestamp)
       let transaction_list: ParsedTransactionWithMeta[] = []
-      this.stats.fetched_transactions = signature_list.length
+      this.stats.fetched_transactions = signature_list?.length ?? 0
 
-      if (process.env.PORGRESS == "true") {
-        this.progress_bar.start(this.stats.fetched_transactions, 0)
-      }
-      for (const signature of signature_list) {
-        let transaction = await this.get_transactions(signature)
-        if (transaction !== null) {
-          transaction_list.push(transaction)
-        }
+      if (signature_list) {
         if (process.env.PORGRESS == "true") {
-          this.progress_bar.increment()
+          this.progress_bar.start(this.stats.fetched_transactions, 0)
         }
-        await sleep(250)
-      }
-
-      if (process.env.PORGRESS == "true") {
-        this.progress_bar.stop()
-      }
-
-      if (mode == Mode.SYNC) {
-        if (signature_list.length <= 1) {
-          mode = Mode.OFF
+        for (const signature of signature_list) {
+          let transaction = await this.get_transactions(signature)
+          if (transaction !== null) {
+            transaction_list.push(transaction)
+          }
+          if (process.env.PORGRESS == "true") {
+            this.progress_bar.increment()
+          }
+          await sleep(250)
         }
-        if (
-          signature_list[signature_list.length - 1]?.signature !== undefined
-        ) {
-          this.before_timestamp =
-            signature_list[signature_list.length - 1]?.signature
-        } else {
-          mode = Mode.OFF
+
+        if (process.env.PORGRESS == "true") {
+          this.progress_bar.stop()
         }
+
+        if (mode == Mode.SYNC) {
+          if (signature_list.length <= 1) {
+            mode = Mode.OFF
+          }
+          if (
+            signature_list[signature_list.length - 1]?.signature !== undefined
+          ) {
+            this.before_timestamp =
+              signature_list[signature_list.length - 1]?.signature
+          } else {
+            mode = Mode.OFF
+          }
+        }
+
+        transaction_list = this.filter_transactions(transaction_list)
+        this.stats.valid_transactions = transaction_list.length
+
+        let db_entries: DBEntry[] = []
+        transaction_list.forEach((transaction) =>
+          db_entries.push(this.map_transaction(transaction))
+        )
+
+        this.stats.inserted_transactions =
+          (await db_client.insert_data(db_entries)) ?? 0
+
+        this.printStats(mode?.toString() ?? "none")
       }
-
-      transaction_list = this.filter_transactions(transaction_list)
-      this.stats.valid_transactions = transaction_list.length
-
-      let db_entries: DBEntry[] = []
-      transaction_list.forEach((transaction) =>
-        db_entries.push(this.map_transaction(transaction))
-      )
-
-      this.stats.inserted_transactions =
-        (await db_client.insert_data(db_entries)) ?? 0
-
-      this.printStats(mode?.toString() ?? "none")
-
       await sleep(1000)
     } while (mode && mode != Mode.OFF)
     console.log("Mode has been switched to OFF")
@@ -108,15 +109,19 @@ export class GMWorker {
 
   private async get_signatures(
     before: string | undefined
-  ): Promise<ConfirmedSignatureInfo[]> {
-    return await this.connection.getSignaturesForAddress(
-      new PublicKey(this.program_id),
-      {
-        limit: parseInt(process.env.TXLIMIT ?? "10"),
-        before,
-      },
-      "finalized"
-    )
+  ): Promise<ConfirmedSignatureInfo[] | undefined> {
+    try {
+      return await this.connection.getSignaturesForAddress(
+        new PublicKey(this.program_id),
+        {
+          limit: parseInt(process.env.TXLIMIT ?? "10"),
+          before,
+        },
+        "finalized"
+      )
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   private get_transactions(
@@ -127,8 +132,8 @@ export class GMWorker {
         signature.signature,
         "finalized"
       )
-    } catch (e) {
-      console.error(e)
+    } catch (error) {
+      console.error(error)
     }
     return null
   }
