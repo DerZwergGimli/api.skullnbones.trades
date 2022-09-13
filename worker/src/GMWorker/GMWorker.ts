@@ -57,6 +57,7 @@ export class GMWorker {
       this.stats.fetched_transactions = signature_list?.length ?? 0
 
       if (signature_list) {
+        console.log("Is not null")
         if (process.env.PORGRESS == "true") {
           this.progress_bar.start(this.stats.fetched_transactions, 0)
         }
@@ -109,7 +110,7 @@ export class GMWorker {
 
   private async get_signatures(
     before: string | undefined
-  ): Promise<ConfirmedSignatureInfo[] | undefined> {
+  ): Promise<ConfirmedSignatureInfo[] | null> {
     try {
       return await this.connection.getSignaturesForAddress(
         new PublicKey(this.program_id),
@@ -122,6 +123,7 @@ export class GMWorker {
     } catch (error) {
       console.log("SIGN")
     }
+    return null
   }
 
   private get_transactions(
