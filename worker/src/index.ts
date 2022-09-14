@@ -6,7 +6,6 @@ import { GENESYSGO } from "./const"
 console.log("--- CONFIG ---")
 console.log(`MONGOCOL = ${process.env.MONGOCOL}`)
 console.log(`MONGODB = ${process.env.MONGODB}`)
-console.log(`MONGOURL = ${process.env.MONGOURL}`)
 console.log(`PORGRESS = ${process.env.PORGRESS}`)
 console.log(`RUNMODE = ${process.env.RUNMODE}`)
 console.log(`TXLIMIT = ${process.env.TXLIMIT}`)
