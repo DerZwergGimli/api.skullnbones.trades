@@ -27,7 +27,7 @@ import {GMWorker} from "../GMWorker/GMWorker"
 */
 
 describe("testing with various tx-samples for valid output", () => {
-  test("should be a simple tx 1", async () => {
+  test("should be a valid tx 1", async () => {
     // @ts-ignore
     const tx: ParsedTransactionWithMeta = tx_in_001
     const worker = new GMWorker()
