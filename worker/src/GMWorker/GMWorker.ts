@@ -5,7 +5,7 @@ import {
   ParsedTransactionWithMeta,
   PublicKey,
 } from "@solana/web3.js"
-import { SOLANRPC } from "../const"
+import { GENESYSGO } from "../const"
 import { FLEETPROGRAMID } from "../const/programids"
 import cliProgress from "cli-progress"
 import * as solana_instruction from "../structs/solana/InnerInstruction"
@@ -52,8 +52,8 @@ export class GMWorker {
     inserted_transactions: 0,
   }
 
-  public constructor() {
-    this.connection = new Connection(SOLANRPC, CONNECTION_CONFIG)
+  public constructor(endpoint: string = GENESYSGO) {
+    this.connection = new Connection(endpoint, CONNECTION_CONFIG)
     this.progress_bar = new cliProgress.SingleBar(
       {},
       cliProgress.Presets.shades_classic
@@ -68,7 +68,10 @@ export class GMWorker {
         inserted_transactions: 0,
       }
 
-      let signature_list = await this.get_signatures(this.before_timestamp)
+      let signature_list = await this.get_signatures(
+        this.before_timestamp,
+        parseInt(process.env.TXLIMIT ?? "10")
+      )
       let transaction_list: ParsedTransactionWithMeta[] = []
       this.stats.fetched_transactions = signature_list?.length ?? 0
 
@@ -77,7 +80,7 @@ export class GMWorker {
           this.progress_bar.start(this.stats.fetched_transactions, 0)
         }
         for (const signature of signature_list) {
-          let transaction = await this.get_transaction(signature)
+          let transaction = await this.get_parsedTransaction(signature)
           if (transaction !== null) {
             transaction_list.push(transaction)
           }
@@ -124,29 +127,20 @@ export class GMWorker {
     console.log("Mode has been switched to OFF")
   }
 
-  private async get_signatures(
-    before: string | undefined
-  ): Promise<ConfirmedSignatureInfo[]> {
-    return await this.connection.getSignaturesForAddress(
-      new PublicKey(this.program_id),
-      {
-        limit: parseInt(process.env.TXLIMIT ?? "10"),
-        before,
-      },
-      "finalized"
-    )
-  }
-
-  private get_transaction(
+  public async get_parsedTransaction(
     signature: ConfirmedSignatureInfo
-  ): Promise<ParsedTransactionWithMeta | null> | null {
-    return this.connection.getParsedTransaction(
+  ): Promise<ParsedTransactionWithMeta | null> {
+    return await this.connection.getParsedTransaction(
       signature.signature,
       "finalized"
     )
   }
 
-  private filter_transactions(
+  public async get_transaction(signature: string) {
+    return await this.connection.getTransaction(signature)
+  }
+
+  public filter_transactions(
     transactions: ParsedTransactionWithMeta[]
   ): ParsedTransactionWithMeta[] {
     return transactions.filter((transaction) =>
@@ -156,9 +150,13 @@ export class GMWorker {
     )
   }
 
-  private map_transaction(transaction: ParsedTransactionWithMeta): DBEntry {
+  public map_transaction(transaction: ParsedTransactionWithMeta): DBEntry {
     let parentInstructions: solana_instruction.ParentInstruction[] = []
-    transaction?.meta?.innerInstructions?.forEach((i) => {
+    const temp = transaction?.meta?.innerInstructions?.filter(
+      (ins) => ins.instructions.length === 3
+    )
+
+    temp?.forEach((i) => {
       parentInstructions.push(
         solana_instruction.Convert.toInnerInstruction(JSON.stringify(i, null))
       )
@@ -169,6 +167,20 @@ export class GMWorker {
       transaction?.slot ?? 0,
       transaction?.transaction?.signatures[0],
       parentInstructions
+    )
+  }
+
+  private async get_signatures(
+    before?: string,
+    limit?: number
+  ): Promise<ConfirmedSignatureInfo[]> {
+    return await this.connection.getSignaturesForAddress(
+      new PublicKey(this.program_id),
+      {
+        limit,
+        before,
+      },
+      "finalized"
     )
   }
 
