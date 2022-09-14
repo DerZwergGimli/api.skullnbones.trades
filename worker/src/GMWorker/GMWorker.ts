@@ -73,17 +73,13 @@ export class GMWorker {
       this.stats.fetched_transactions = signature_list?.length ?? 0
 
       if (signature_list) {
-        console.log("Is not null")
         if (process.env.PORGRESS == "true") {
           this.progress_bar.start(this.stats.fetched_transactions, 0)
         }
         for (const signature of signature_list) {
           let transaction = await this.get_transaction(signature)
-          console.log("got_transaction")
           if (transaction !== null) {
             transaction_list.push(transaction)
-          } else {
-            console.log("transaction is null")
           }
           if (process.env.PORGRESS == "true") {
             this.progress_bar.increment()
@@ -105,6 +101,7 @@ export class GMWorker {
             this.before_timestamp =
               signature_list[signature_list.length - 1]?.signature
           } else {
+            console.log(`Last logged sync sign: ${this.before_timestamp}`)
             mode = Mode.OFF
           }
         }
@@ -129,21 +126,15 @@ export class GMWorker {
 
   private async get_signatures(
     before: string | undefined
-  ): Promise<ConfirmedSignatureInfo[] | null> {
-    console.log("get_signatures")
-    try {
-      return await this.connection.getSignaturesForAddress(
-        new PublicKey(this.program_id),
-        {
-          limit: parseInt(process.env.TXLIMIT ?? "10"),
-          before,
-        },
-        "finalized"
-      )
-    } catch (error) {
-      console.log(error)
-    }
-    return null
+  ): Promise<ConfirmedSignatureInfo[]> {
+    return await this.connection.getSignaturesForAddress(
+      new PublicKey(this.program_id),
+      {
+        limit: parseInt(process.env.TXLIMIT ?? "10"),
+        before,
+      },
+      "finalized"
+    )
   }
 
   private get_transaction(
