@@ -1,7 +1,6 @@
 import { GMWorker, Mode } from "./GMWorker/GMWorker"
 import { DBClient } from "./Database/DBClient"
 import "log-timestamp"
-import { SOLANARPC } from "./const"
 
 console.log("--- Worker Starting ---")
 
@@ -14,12 +13,12 @@ function getDBClient() {
 }
 
 const run_loop = async () => {
-  let worker = new GMWorker(SOLANARPC)
+  let worker = new GMWorker()
   await worker.run(Mode.LOOP, getDBClient())
 }
 
 const run_sync = async () => {
-  let worker = new GMWorker(SOLANARPC)
+  let worker = new GMWorker()
   await worker.run(Mode.SYNC, getDBClient())
 }
 
