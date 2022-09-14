@@ -1,6 +1,7 @@
 import { GMWorker, Mode } from "./GMWorker/GMWorker"
 import { DBClient } from "./Database/DBClient"
 import "log-timestamp"
+import { GENESYSGO } from "./const"
 
 console.log("--- Worker Starting ---")
 
@@ -13,12 +14,12 @@ function getDBClient() {
 }
 
 const run_loop = async () => {
-  let worker = new GMWorker()
+  let worker = new GMWorker(process.env.RPC ?? GENESYSGO)
   await worker.run(Mode.LOOP, getDBClient())
 }
 
 const run_sync = async () => {
-  let worker = new GMWorker()
+  let worker = new GMWorker(process.env.RPC ?? GENESYSGO)
   await worker.run(Mode.SYNC, getDBClient())
 }
 

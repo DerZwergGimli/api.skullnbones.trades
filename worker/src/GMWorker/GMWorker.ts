@@ -87,7 +87,7 @@ export class GMWorker {
           if (process.env.PORGRESS == "true") {
             this.progress_bar.increment()
           }
-          await sleep(250)
+          await sleep(parseInt(process.env.DELAY ?? "250"))
         }
 
         if (process.env.PORGRESS == "true") {
