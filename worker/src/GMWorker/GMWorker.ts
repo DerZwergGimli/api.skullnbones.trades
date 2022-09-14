@@ -140,7 +140,6 @@ export class GMWorker {
   private get_transaction(
     signature: ConfirmedSignatureInfo
   ): Promise<ParsedTransactionWithMeta | null> | null {
-    console.log("get_transaction")
     return this.connection.getParsedTransaction(
       signature.signature,
       "finalized"
