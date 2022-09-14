@@ -9,7 +9,7 @@ import {
 
 export class SymbolAdapter {
   public symbols: string[] = [];
-  public exchange = "GalacticMarketplace";
+  public exchange = "GM";
   public type = "NFT";
   public timezone = "UTC";
   public minmov = 1;
@@ -49,13 +49,15 @@ export class SymbolAdapter {
   }
 
   public get_description(): string[] {
-    let currency_codes: string[] = [];
+    let description: string[] = [];
     this.symbols.forEach((symbol) => {
       this.pairs.forEach((pair) => {
-        currency_codes.push(symbol + " / " + pair);
+        if (symbol.includes(pair)) {
+          description.push(symbol.replace(pair, "") + " / " + pair);
+        }
       });
     });
-    return currency_codes;
+    return description;
   }
 
   public get_pricescale(): number[] {
@@ -145,7 +147,13 @@ export class SymbolAdapter {
 
   public get_config(): UdfCompatibleConfiguration {
     return {
-      exchanges: [{ value: this.exchange, name: "AAA", desc: "AAAAA" }],
+      exchanges: [
+        {
+          value: this.exchange,
+          name: "GalacticMarketplace",
+          desc: "GalacticMarketplace StarAtlas",
+        },
+      ],
       supported_resolutions: this.supported_resolutions,
       supports_search: this.supports_search,
       supports_marks: false,

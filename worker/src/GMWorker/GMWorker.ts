@@ -20,7 +20,7 @@ import fetchBuilder from "fetch-retry-ts"
 const options = {
   retries: 3,
   retryDelay: 1000,
-  retryOn: [419, 503, 504],
+  retryOn: [419, 503, 504, 502],
 }
 
 const fetch = fetchBuilder(cf, options)
