@@ -3,6 +3,15 @@ import { DBClient } from "./Database/DBClient"
 import "log-timestamp"
 import { GENESYSGO } from "./const"
 
+console.log("--- CONFIG ---")
+console.log(`MONGOCOL = ${process.env.MONGOCOL}`)
+console.log(`MONGODB = ${process.env.MONGODB}`)
+console.log(`MONGOURL = ${process.env.MONGOURL}`)
+console.log(`PORGRESS = ${process.env.PORGRESS}`)
+console.log(`RUNMODE = ${process.env.RUNMODE}`)
+console.log(`TXLIMIT = ${process.env.TXLIMIT}`)
+console.log(`DELAY = ${process.env.DELAY}`)
+console.log(`RPC = ${process.env.RPC}`)
 console.log("--- Worker Starting ---")
 
 function getDBClient() {
