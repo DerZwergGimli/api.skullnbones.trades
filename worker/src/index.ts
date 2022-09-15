@@ -16,21 +16,21 @@ console.log("--- Worker Starting ---")
 
 function getDBClient() {
   return new DBClient(
-      process.env.MONGOURL ?? "",
-      process.env.MONGODB ?? "js_trades",
-      process.env.MONGOCOL ?? "trades"
+    process.env.MONGOURL ?? "",
+    process.env.MONGODB ?? "js_trades",
+    process.env.MONGOCOL ?? "trades"
   )
 }
 
 const run_loop = async () => {
-  await localStoreInstance.init();
+  await localStoreInstance.init()
 
   let worker = new GMWorker(process.env.RPC ?? GENESYSGO)
   await worker.run(Mode.LOOP, getDBClient())
 }
 
 const run_sync = async () => {
-  await localStoreInstance.init();
+  await localStoreInstance.init()
 
   let worker = new GMWorker(process.env.RPC ?? GENESYSGO)
   await worker.run(Mode.SYNC, getDBClient())
