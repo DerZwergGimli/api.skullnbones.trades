@@ -2,7 +2,7 @@ import { GMWorker, Mode } from "./GMWorker/GMWorker"
 import { DBClient } from "./Database/DBClient"
 import "log-timestamp"
 import { GENESYSGO } from "./constant"
-import localStoreInstance from "./adapters/LocalStoreAdapter"
+import localStoreInstance from "apilib/src/adapters/LocalStoreAdapter"
 
 console.log("--- CONFIG ---")
 console.log(`MONGOCOL = ${process.env.MONGOCOL}`)

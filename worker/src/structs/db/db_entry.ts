@@ -1,5 +1,5 @@
 import { ParentInstruction } from "../solana/InnerInstruction"
-import localStoreInstance from "../../adapters/LocalStoreAdapter"
+import localStoreInstance from "apilib/src/adapters/LocalStoreAdapter"
 
 export interface DBEntry {
   timestamp: number
