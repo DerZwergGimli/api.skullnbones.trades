@@ -8,3 +8,5 @@
 /worker/yarn.lock!/worker/in.json
 /worker/out.json
 /worker/in.json
+/apilibrary/dist/
+/apilibrary/node_modules/

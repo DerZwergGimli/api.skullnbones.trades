@@ -1,4 +1,4 @@
-import localStoreInstance from "../adapters/LocalStoreAdapter";
+import { localStoreInstance } from "../../../apilibrary/src/adapters/LocalStoreAdapter";
 import { TradeHistory } from "../interfaces/DatafeedUDFCompatibleTradeInterface";
 import { SymbolAdapter } from "../adapters/SymbolAdapter";
 import {
@@ -9,7 +9,7 @@ import { LibrarySymbolInfo } from "../interfaces/DatafeedInterfaces";
 
 export class UDFSymbolService {
   public symbol_info(): LibrarySymbolInfo {
-    let localSymbols = new SymbolAdapter(localStoreInstance.symbols);
+    let localSymbols = new SymbolAdapter(localStoreInstance.symbolsStore);
 
     return localSymbols.get_parsed();
   }
@@ -17,7 +17,7 @@ export class UDFSymbolService {
   public symbols(search_symbol: string): LibrarySymbolInfo {
     console.log(search_symbol);
 
-    let localSymbols = new SymbolAdapter(localStoreInstance.symbols);
+    let localSymbols = new SymbolAdapter(localStoreInstance.symbolsStore);
     localSymbols.search_symbols(search_symbol);
 
     return localSymbols.get_parsed();
@@ -29,7 +29,7 @@ export class UDFSymbolService {
     type?: string,
     exchange?: string
   ): UdfSearchSymbolsResponse | UdfErrorResponse[] {
-    let localSymbols = new SymbolAdapter(localStoreInstance.symbols);
+    let localSymbols = new SymbolAdapter(localStoreInstance.symbolsStore);
     localSymbols.search_symbols_adv(query, limit, type, exchange);
 
     return localSymbols.get_searched();

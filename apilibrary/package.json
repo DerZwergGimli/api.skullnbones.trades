@@ -1,0 +1,12 @@
+{
+  "name": "apilibrary",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}

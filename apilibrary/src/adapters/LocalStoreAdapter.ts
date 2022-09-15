@@ -1,22 +1,14 @@
-import { StarAtlasAPI } from "../interfaces/StarAtlasAPI"
-import { STARATLASAPIURL } from "../constant/staratlasapi"
-import { AxiosResponse } from "axios"
+import { StarAtlasAPI } from "../interfaces/StarAtlasAPI";
+import { STARATLASAPIURL } from "../constant/staratlasapi";
+import { AxiosResponse } from "axios";
+import { Symbol } from "../interfaces/Symbol";
+import { Currency } from "../interfaces/Currency";
 
-const axios = require("axios").default
-
-interface Symbols {
-  symbol: string
-  mint: string
-}
-
-interface Currency {
-  symbol: string
-  mint: string
-}
+const axios = require("axios").default;
 
 class LocalStoreAdapter {
-  public initialized = false
-  public symbolsStore: Symbols[] = []
+  public initialized = false;
+  public symbolsStore: Symbol[] = [];
   public currencyStore: Currency[] = [
     {
       symbol: "USDC",
@@ -26,34 +18,34 @@ class LocalStoreAdapter {
       symbol: "ATLAS",
       mint: "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx",
     },
-  ]
+  ];
 
   public async init() {
-    this.symbolsStore = await this.initSymbols()
-    this.initialized = true
-    console.log("LocalStoreAdapter initialized")
+    this.symbolsStore = await this.initSymbols();
+    this.initialized = true;
+    console.log("LocalStoreAdapter initialized");
   }
 
-  private async initSymbols(): Promise<Symbols[]> {
-    let staratlas_list: StarAtlasAPI[] = []
+  private async initSymbols(): Promise<Symbol[]> {
+    let staratlas_list: StarAtlasAPI[] = [];
 
     await axios
       .get(STARATLASAPIURL)
       .then((response: AxiosResponse<StarAtlasAPI[]>) => {
-        staratlas_list = response.data
-      })
+        staratlas_list = response.data;
+      });
 
-    let symbols: Symbols[] = []
+    let symbols: Symbol[] = [];
     staratlas_list.forEach((asset) => {
       symbols.push({
         symbol: asset.symbol,
         mint: asset.mint,
-      })
-    })
+      });
+    });
 
-    return symbols
+    return symbols;
   }
 }
 
-const localStoreInstance = new LocalStoreAdapter()
-export = localStoreInstance
+const localStoreInstance = new LocalStoreAdapter();
+export { localStoreInstance };

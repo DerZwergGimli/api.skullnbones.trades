@@ -1,5 +1,5 @@
 import { app } from "./app";
-import localStoreInstance from "./adapters/LocalStoreAdapter";
+import { localStoreInstance } from "../../apilibrary/src/adapters/LocalStoreAdapter";
 
 const port = process.env.PORT || 3000;
 

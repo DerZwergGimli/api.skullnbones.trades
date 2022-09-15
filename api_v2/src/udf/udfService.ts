@@ -1,4 +1,4 @@
-import localStoreInstance from "../adapters/LocalStoreAdapter";
+import { localStoreInstance } from "../../../apilibrary/src/adapters/LocalStoreAdapter";
 import { SymbolAdapter } from "../adapters/SymbolAdapter";
 import { UdfCompatibleConfiguration } from "../interfaces/DatafeedUDFCompatibleInterfaces";
 
@@ -12,7 +12,7 @@ export class UDFService {
   }
 
   public config(): UdfCompatibleConfiguration {
-    let localSymbols = new SymbolAdapter(localStoreInstance.symbols);
+    let localSymbols = new SymbolAdapter(localStoreInstance.symbolsStore);
     return localSymbols.get_config();
   }
 }

@@ -7,8 +7,10 @@ import {
   ResolutionString,
 } from "../interfaces/DatafeedInterfaces";
 
+import { Symbol } from "../../../apilibrary/src/interfaces/Symbol";
+
 export class SymbolAdapter {
-  public symbols: string[] = [];
+  public symbols: Symbol[] = [];
   public exchange = "GM";
   public type = "NFT";
   public timezone = "UTC";
@@ -34,7 +36,7 @@ export class SymbolAdapter {
   private supports_search = true;
   private pairs = ["ATLAS", "USDC"];
 
-  constructor(symbols: string[]) {
+  constructor(symbols: Symbol[]) {
     this.symbols = symbols;
   }
 
@@ -52,8 +54,8 @@ export class SymbolAdapter {
     let description: string[] = [];
     this.symbols.forEach((symbol) => {
       this.pairs.forEach((pair) => {
-        if (symbol.includes(pair)) {
-          description.push(symbol.replace(pair, "") + " / " + pair);
+        if (symbol.symbol.includes(pair)) {
+          description.push(symbol.symbol.replace(pair, "") + " / " + pair);
         }
       });
     });
@@ -70,19 +72,23 @@ export class SymbolAdapter {
   }
 
   public search_symbols(search_symbol: string) {
-    let currency_codes: string[] = [];
+    let currency_codes: Symbol[] = [];
     this.symbols.forEach((symbol) => {
       this.pairs.forEach((pair) => {
-        currency_codes.push(symbol + pair);
+        currency_codes.push({
+          mint: "",
+          symbol: symbol + pair,
+        });
       });
     });
     console.log(search_symbol);
+
     //TODO Make better filtering
     this.symbols = currency_codes.filter((code) =>
-      code.includes(search_symbol)
+      code.symbol.includes(search_symbol)
     );
-    this.symbols.map((symbol) => symbol.replace("BTC", ""));
-    this.symbols.map((symbol) => symbol.replace("USDC", ""));
+    this.symbols.map((symbol) => symbol.symbol.replace("BTC", ""));
+    this.symbols.map((symbol) => symbol.symbol.replace("USDC", ""));
   }
 
   public search_symbols_adv(
@@ -99,9 +105,20 @@ export class SymbolAdapter {
     });
 
     //TODO Make better filtering sec adv
-    this.symbols = currency_codes.filter((code) => code.includes(query));
-    this.symbols.map((symbol) => symbol.replace("BTC", ""));
-    this.symbols.map((symbol) => symbol.replace("USDC", ""));
+    const filtered_codes = currency_codes.filter((code) =>
+      code.includes(query)
+    );
+
+    this.symbols = [];
+    filtered_codes.forEach((code) =>
+      this.symbols.push({
+        mint: "",
+        symbol: code,
+      })
+    );
+
+    this.symbols.map((symbol) => symbol.symbol.replace("BTC", ""));
+    this.symbols.map((symbol) => symbol.symbol.replace("USDC", ""));
     this.symbols.splice(limit);
   }
 
@@ -118,7 +135,7 @@ export class SymbolAdapter {
       has_weekly_and_monthly: this.has_weekly_and_monthly,
       listed_exchange: this.exchange,
       minmov: this.minmov,
-      name: this.symbols[0],
+      name: this.symbols[0].symbol,
       pricescale: this.get_pricescale()[0],
       session: this.session,
       supported_resolutions: this.supported_resolutions,
@@ -136,7 +153,7 @@ export class SymbolAdapter {
         description: this.get_description()[index],
         exchange: this.exchange,
         full_name: value + "/USDC",
-        symbol: value,
+        symbol: value.symbol,
         ticker: "",
         type: this.type,
       });
