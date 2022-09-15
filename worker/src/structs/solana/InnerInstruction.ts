@@ -2,7 +2,7 @@
 //
 //   import { Convert, InnerInstruction } from "./file";
 //
-//   const innerInstruction = Convert.toInnerInstruction(json);
+//   constant innerInstruction = Convert.toInnerInstruction(json);
 
 export interface ParentInstruction {
   index: number
@@ -35,11 +35,9 @@ export interface TokenAmount {
   uiAmountString: string
 }
 
-
 // Converts JSON strings to/from your types
 export class Convert {
   public static toInnerInstruction(json: string): ParentInstruction {
-
     return JSON.parse(json)
   }
 }

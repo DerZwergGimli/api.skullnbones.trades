@@ -5,8 +5,8 @@ import {
   ParsedTransactionWithMeta,
   PublicKey,
 } from "@solana/web3.js"
-import { GENESYSGO } from "../const"
-import { FLEETPROGRAMID } from "../const/programids"
+import { GENESYSGO } from "../constant"
+import { FLEETPROGRAMID } from "../constant/programids"
 import cliProgress from "cli-progress"
 import * as solana_instruction from "../structs/solana/InnerInstruction"
 import * as db from "../structs/db/db_entry"

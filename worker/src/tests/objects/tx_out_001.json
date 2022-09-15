@@ -38,6 +38,7 @@
     "cost_price": 1100,
     "cost_total": 1100,
     "side": 0,
-    "size": 1
+    "size": 1,
+    "symbol": "PX4ATLAS"
   }
 }

@@ -1,9 +1,3 @@
-// To parse this data:
-//
-//   import { Convert } from "./file";
-//
-//   constant starAtlasAPI = Convert.toStarAtlasAPI(json);
-
 export interface StarAtlasAPI {
   _id: string;
   deactivated: boolean;
@@ -83,16 +77,12 @@ export interface Market {
   _id?: string;
   id: string;
   quotePair: QuotePair;
-  serumProgramId?: SerumProgramID;
+  serumProgramId?: string;
 }
 
 export enum QuotePair {
   Atlas = "ATLAS",
   Usdc = "USDC",
-}
-
-export enum SerumProgramID {
-  The9XQeWvG816BUx9EPjHMAT23YvVM2ZWbrrpZb9PusVFin = "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
 }
 
 export interface Media {
@@ -159,15 +149,4 @@ export interface TradeSettings {
 export interface Msrp {
   value: number;
   currencySymbol: QuotePair;
-}
-
-// Converts JSON strings to/from your types
-export class Convert {
-  public static toStarAtlasAPI(json: string): StarAtlasAPI[] {
-    return JSON.parse(json);
-  }
-
-  public static starAtlasAPIToJson(value: StarAtlasAPI[]): string {
-    return JSON.stringify(value);
-  }
 }

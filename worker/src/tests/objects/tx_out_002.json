@@ -38,6 +38,7 @@
     "cost_price": 0.00001,
     "cost_total": 0.00024,
     "side": 0,
-    "size": 24
+    "size": 24,
+    "symbol": "FUELUSDC"
   }
 }

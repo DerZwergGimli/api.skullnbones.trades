@@ -9,6 +9,7 @@ import tx_in_003 from "./objects/tx_in_003.json"
 import tx_out_003 from "./objects/tx_out_003.json"
 
 import {GMWorker} from "../GMWorker/GMWorker"
+import localStoreInstance from "../adapters/LocalStoreAdapter"
 
 /* SAMPLE CREATE
   let worker = new GMWorker(SOLANARPC)
@@ -27,7 +28,10 @@ import {GMWorker} from "../GMWorker/GMWorker"
 */
 
 describe("testing with various tx-samples for valid output", () => {
+
   test("should be a valid tx 1", async () => {
+    await localStoreInstance.init()
+
     // @ts-ignore
     const tx: ParsedTransactionWithMeta = tx_in_001
     const worker = new GMWorker()
@@ -37,6 +41,8 @@ describe("testing with various tx-samples for valid output", () => {
   })
 
   test("should be a valid tx 2", async () => {
+    await localStoreInstance.init()
+
     // @ts-ignore
     const tx: ParsedTransactionWithMeta = tx_in_002
     const worker = new GMWorker()
@@ -46,6 +52,8 @@ describe("testing with various tx-samples for valid output", () => {
   })
 
   test("should be a valid tx 3", async () => {
+    await localStoreInstance.init()
+    
     // @ts-ignore
     const tx: ParsedTransactionWithMeta = tx_in_003
     const worker = new GMWorker()
