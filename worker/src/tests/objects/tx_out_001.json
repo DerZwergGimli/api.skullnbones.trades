@@ -33,5 +33,11 @@
       "amount": 1,
       "decimals": 0
     }
-  ]
+  ],
+  "trade": {
+    "cost_price": 1100,
+    "cost_total": 1100,
+    "side": 0,
+    "size": 1
+  }
 }

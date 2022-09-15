@@ -63,5 +63,11 @@
       "amount": 4849999,
       "decimals": 6
     }
-  ]
+  ],
+  "trade": {
+    "cost_price": 4.849999,
+    "cost_total": 4.849999,
+    "side": 0,
+    "size": 1
+  }
 }

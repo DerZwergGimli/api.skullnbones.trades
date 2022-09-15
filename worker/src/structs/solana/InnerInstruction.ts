@@ -35,9 +35,11 @@ export interface TokenAmount {
   uiAmountString: string
 }
 
+
 // Converts JSON strings to/from your types
 export class Convert {
   public static toInnerInstruction(json: string): ParentInstruction {
+
     return JSON.parse(json)
   }
 }

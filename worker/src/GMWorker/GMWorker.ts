@@ -162,7 +162,7 @@ export class GMWorker {
       )
     })
 
-    return db.Convert.toDBEntry(
+    return db.DBConverter.toDBEntry(
       transaction?.blockTime ?? 0,
       transaction?.slot ?? 0,
       transaction?.transaction?.signatures[0],

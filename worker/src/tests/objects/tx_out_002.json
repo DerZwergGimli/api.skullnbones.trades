@@ -33,5 +33,11 @@
       "amount": 24,
       "decimals": 0
     }
-  ]
+  ],
+  "trade": {
+    "cost_price": 0.00001,
+    "cost_total": 0.00024,
+    "side": 0,
+    "size": 24
+  }
 }
