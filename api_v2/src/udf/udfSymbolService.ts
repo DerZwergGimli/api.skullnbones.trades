@@ -14,25 +14,40 @@ export class UDFSymbolService {
     return localSymbols.get_parsed();
   }
 
-  public symbols(search_symbol: string): LibrarySymbolInfo {
+  public symbols(search_symbol: string): LibrarySymbolInfo | UdfErrorResponse {
     console.log(search_symbol);
 
     let localSymbols = new SymbolAdapter(localStoreInstance.symbolsStore);
-    localSymbols.search_symbols(search_symbol);
 
-    return localSymbols.get_parsed();
+    try {
+      localSymbols.search_symbols_adv(search_symbol);
+
+      return localSymbols.get_parsed();
+    } catch (err) {
+      return {
+        s: "error",
+        errmsg: `Error finding symbol: ${search_symbol}`,
+      };
+    }
   }
 
   public searchSymbols(
     query: string,
-    limit: number,
+    limit?: number,
     type?: string,
     exchange?: string
-  ): UdfSearchSymbolsResponse | UdfErrorResponse[] {
+  ): UdfSearchSymbolsResponse | UdfErrorResponse {
     let localSymbols = new SymbolAdapter(localStoreInstance.symbolsStore);
-    localSymbols.search_symbols_adv(query, limit, type, exchange);
 
-    return localSymbols.get_searched();
+    try {
+      localSymbols.search_symbols_adv(query, limit, type, exchange);
+      return localSymbols.get_searched();
+    } catch (err) {
+      return {
+        s: "error",
+        errmsg: `Error finding symbol: ${query}`,
+      };
+    }
   }
 
   public history(

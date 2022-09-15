@@ -37,9 +37,13 @@ class LocalStoreAdapter {
 
     let symbols: Symbol[] = [];
     staratlas_list.forEach((asset) => {
-      symbols.push({
-        symbol: asset.symbol,
-        mint: asset.mint,
+      this.currencyStore.forEach((code) => {
+        symbols.push({
+          symbol: asset.symbol,
+          mint: asset.mint,
+          pair: code,
+          symbol_pair: asset.symbol + code.symbol,
+        });
       });
     });
 

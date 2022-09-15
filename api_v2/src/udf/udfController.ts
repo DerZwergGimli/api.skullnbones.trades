@@ -48,7 +48,9 @@ export class UDFController extends Controller {
    * Retrieves a symbol-info object containing searched symbols.
    */
   @Get("symbols")
-  public async symbols(@Query() symbol: string): Promise<LibrarySymbolInfo> {
+  public async symbols(
+    @Query() symbol: string
+  ): Promise<LibrarySymbolInfo | UdfErrorResponse> {
     return new UDFSymbolService().symbols(symbol);
   }
 
@@ -61,7 +63,7 @@ export class UDFController extends Controller {
     @Query() limit: number,
     @Query() type?: string,
     @Query() exchange?: string
-  ): Promise<UdfSearchSymbolsResponse | UdfErrorResponse[]> {
+  ): Promise<UdfSearchSymbolsResponse | UdfErrorResponse> {
     return new UDFSymbolService().searchSymbols(query, limit, type, exchange);
   }
 
@@ -76,7 +78,7 @@ export class UDFController extends Controller {
     @Query() to: number,
     @Query() countback?: number,
     @Query() currencyCode?: string
-  ): Promise<TradeHistory> {
+  ): Promise<TradeHistory | UdfErrorResponse> {
     return new UDFSymbolService().history(symbol, from, to, resolution);
   }
 }
