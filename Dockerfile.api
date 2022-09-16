@@ -8,8 +8,8 @@ WORKDIR /APIENDPOINT
 COPY ./api_v2/package.json ./api_v2/package.json
 COPY ./apilibrary/package.json ./apilibrary/package.json
 
-RUN cd ./apilibrary NODE_ENV=$NODE_ENV npm install
-RUN cd ./api_v2 NODE_ENV=$NODE_ENV npm install
+RUN cd ./apilibrary && npm install
+RUN cd ./api_v2 && npm install
 
 RUN npm install typescript -g
 

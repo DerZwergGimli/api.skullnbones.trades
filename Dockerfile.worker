@@ -5,7 +5,7 @@ WORKDIR /WORKERHOME
 COPY ./worker/package.json ./worker/package.json
 COPY ./apilibrary/package.json ./apilibrary/package.json
 
-RUN cd ./apilibrary NODE_ENV=$NODE_ENV npm install
+RUN cd ./apilibrary && npm install
 RUN cd ./worker && npm install
 RUN npm install typescript -g
 
