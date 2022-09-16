@@ -11,10 +11,26 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
 
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "3000:3000"
+    environment:
+      MONGOURL: mongodb://root:example@mongo:27017
+      MONGODB: js_trades
+      MONGOCOL: trades_v1
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
   worker_loop:
     build:
-      context: worker/
-      dockerfile: DOCKERFILE
+      context: .
+      dockerfile: Dockerfile.worker
     restart: always
     links:
       - mongo
@@ -33,8 +49,8 @@ services:
 
   worker_sync:
     build:
-      context: worker/
-      dockerfile: DOCKERFILE
+      context: .
+      dockerfile: Dockerfile.worker
     restart: always
     links:
       - mongo

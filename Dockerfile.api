@@ -1,0 +1,23 @@
+FROM node:14
+
+ARG NODE_ENV=production
+ENV NODE_ENV $NODE_ENV
+
+WORKDIR /APIENDPOINT
+
+COPY ./api_v2/package.json ./api_v2/package.json
+COPY ./apilibrary/package.json ./apilibrary/package.json
+
+RUN cd ./apilibrary NODE_ENV=$NODE_ENV npm install
+RUN cd ./api_v2 NODE_ENV=$NODE_ENV npm install
+
+RUN npm install typescript -g
+
+COPY ./api_v2 ./api_v2
+COPY ./apilibrary ./apilibrary
+
+RUN cd apilibrary && tsc
+RUN cd api_v2 && NODE_ENV=$NODE_ENV tsc
+
+
+CMD ["node", "./api_v2/build/server.js"]
