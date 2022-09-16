@@ -17,7 +17,6 @@ COPY ./api_v2 ./api_v2
 COPY ./apilibrary ./apilibrary
 
 RUN cd apilibrary && tsc
-RUN cd api_v2 && yarn run tsoa spec-and-routes
 RUN cd api_v2 && NODE_ENV=$NODE_ENV tsc
 
 
