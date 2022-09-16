@@ -7,7 +7,7 @@ import {
   ResolutionString,
 } from "../interfaces/DatafeedInterfaces";
 
-import { Symbol } from "../../../apilibrary/src/interfaces/Symbol";
+import { Symbol } from "apilibrary/src/interfaces/Symbol";
 
 export class SymbolAdapter {
   public symbols: Symbol[] = [];

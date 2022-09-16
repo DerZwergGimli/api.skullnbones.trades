@@ -10,3 +10,4 @@
 /worker/in.json
 /apilibrary/dist/
 /apilibrary/node_modules/
+/api_v2/.env

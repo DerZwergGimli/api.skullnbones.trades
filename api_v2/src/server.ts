@@ -1,5 +1,5 @@
 import { app } from "./app";
-import { localStoreInstance } from "../../apilibrary/src/adapters/LocalStoreAdapter";
+import { localStoreInstance } from "apilibrary/dist/adapters/LocalStoreAdapter";
 import { databaseAdapter } from "./adapters/DatabaseAdapter";
 
 const port = process.env.PORT || 3000;

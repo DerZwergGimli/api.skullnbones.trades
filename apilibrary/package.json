@@ -1,12 +1,13 @@
 {
   "name": "apilibrary",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
     "build": "npx tsc"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "node-fetch": "^3.2.10"
   }
 }

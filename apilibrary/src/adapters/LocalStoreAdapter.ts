@@ -1,10 +1,9 @@
 import { StarAtlasAPI } from "../interfaces/StarAtlasAPI";
 import { STARATLASAPIURL } from "../constant/staratlasapi";
-import { AxiosResponse } from "axios";
+
 import { Symbol } from "../interfaces/Symbol";
 import { Currency } from "../interfaces/Currency";
-
-const axios = require("axios").default;
+import axios, { AxiosResponse } from "axios";
 
 class LocalStoreAdapter {
   public initialized = false;
@@ -28,6 +27,12 @@ class LocalStoreAdapter {
 
   private async initSymbols(): Promise<Symbol[]> {
     let staratlas_list: StarAtlasAPI[] = [];
+
+    /*
+            fetch(STARATLASAPIURL)
+              .then((res) => res.json())
+              .then((data) => (staratlas_list = data));
+        */
 
     await axios
       .get(STARATLASAPIURL)

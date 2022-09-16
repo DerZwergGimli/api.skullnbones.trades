@@ -1,4 +1,4 @@
-import { localStoreInstance } from "../../../apilibrary/src/adapters/LocalStoreAdapter";
+import { localStoreInstance } from "apilibrary/dist/adapters/LocalStoreAdapter";
 import { SymbolAdapter } from "../adapters/SymbolAdapter";
 import { UdfCompatibleConfiguration } from "../interfaces/DatafeedUDFCompatibleInterfaces";
 
