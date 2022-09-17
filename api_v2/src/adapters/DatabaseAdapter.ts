@@ -1,7 +1,5 @@
 import { Collection, MongoClient } from "mongodb";
 import { TradeHistory } from "../interfaces/DatafeedUDFCompatibleTradeInterface";
-
-import { createClient } from "redis";
 import { get_history_aggregation } from "../aggregations/history_aggregation";
 
 class DatabaseAdapter {
@@ -12,12 +10,6 @@ class DatabaseAdapter {
 
   public async init(url: string) {
     this.client = new MongoClient(url);
-
-    this.redisClient = createClient({ url: "redis://localhost:6379" });
-
-    this.redisClient.on("error", (error) => console.error(`Error : ${error}`));
-    this.redisClient.on("connect", () => console.log("cache init"));
-    await this.redisClient.connect();
 
     this.collection = this.client
       .db(process.env.MONGODB)
@@ -78,4 +70,4 @@ class DatabaseAdapter {
 
 const databaseAdapter = new DatabaseAdapter();
 
-export {databaseAdapter};
+export { databaseAdapter };
