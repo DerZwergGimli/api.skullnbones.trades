@@ -13,14 +13,10 @@ class DatabaseAdapter {
   public async init(url: string) {
     this.client = new MongoClient(url);
 
-    this.redisClient = createClient({
-      socket: {
-        host: process.env.REDISHOST,
-        port: 6379,
-      },
-    });
+    this.redisClient = createClient({ url: "redis://localhost:6379" });
+
     this.redisClient.on("error", (error) => console.error(`Error : ${error}`));
-    this.redisClient.on("success", () => console.log("cache init"));
+    this.redisClient.on("connect", () => console.log("cache init"));
     await this.redisClient.connect();
 
     this.collection = this.client
@@ -39,12 +35,7 @@ class DatabaseAdapter {
     currentyCode?: string
   ): Promise<TradeHistory> {
     const cache_query: string =
-      symbol +
-        resolution +
-        from.toString() +
-        to.toString() +
-        countback?.toString() +
-        currentyCode ?? "";
+      symbol + resolution + from.toString() + to.toString();
     let trades: TradeHistory = {
       c: [],
       h: [],
@@ -55,8 +46,9 @@ class DatabaseAdapter {
       v: [],
     };
 
-    const cached = this.cacheCheck(cache_query);
-    if (cached === 0) {
+    let cached = await this.cacheCheck(cache_query);
+
+    if (cached === undefined || cached === trades) {
       const cursor = this.collection?.aggregate(
         get_history_aggregation(symbol, from, to, resolution)
       );
@@ -64,38 +56,46 @@ class DatabaseAdapter {
       const data = await cursor?.toArray();
 
       data?.forEach((d) => {
-        trades.o.push(d.open);
-        trades.c.push(d.close);
-        trades.h.push(d.high);
-        trades.l.push(d.low);
+        trades.o.push(d.open.toFixed(6));
+        trades.c.push(d.close.toFixed(6));
+        trades.h.push(d.high.toFixed(6));
+        trades.l.push(d.low.toFixed(6));
         trades.t.push(d.time_last);
-        trades.v.push(d.volume);
+        trades.v.push(d.volume.toFixed(6));
       });
       trades.s = "ok";
 
       //write data to cache
       try {
-        await this.redisClient.setEx(cache_query, 3600, JSON.stringify(trades));
+        await this.redisClient.json.set(
+          cache_query,
+          "$",
+          trades,
+          function (err, result) {
+            if (err) throw err;
+            if (result) console.log(result);
+          }
+        );
       } catch (err) {
         console.log(err);
       }
     } else {
       trades = cached;
+
+      console.log("cached");
     }
 
     return trades;
   }
 
-  private cacheCheck(query: string): any {
-    this.redisClient.get(query, (err, data) => {
-      if (err) throw err;
-
-      if (data !== null) {
-        return data;
-      } else {
-        return 0;
-      }
-    });
+  private async cacheCheck(query: string): Promise<TradeHistory | undefined> {
+    try {
+      return (await JSON.parse(
+        this.redisClient.json.get(query)
+      )) as TradeHistory;
+    } catch (err) {
+      return undefined;
+    }
   }
 }
 

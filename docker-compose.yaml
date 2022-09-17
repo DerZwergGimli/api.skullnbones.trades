@@ -12,11 +12,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
 
   cache:
-    image: redis:6.2-alpine
+    image: redislabs/rejson:latest
     restart: always
     ports:
       - '6379:6379'
-    command: redis-server --save 60 100 --loglevel warning #--requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     volumes:

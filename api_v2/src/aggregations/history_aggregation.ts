@@ -23,11 +23,6 @@ export function get_history_aggregation(symbol, from, to, resolution) {
       },
     },
     {
-      $sort: {
-        timestamp: -1,
-      },
-    },
-    {
       $group: {
         _id: {
           time: {
@@ -56,6 +51,11 @@ export function get_history_aggregation(symbol, from, to, resolution) {
         volume: {
           $sum: "$volume",
         },
+      },
+    },
+    {
+      $sort: {
+        time_last: 1,
       },
     },
   ];

@@ -55,7 +55,9 @@ export class UDFSymbolService {
     symbol: string,
     from: number,
     to: number,
-    resolution: string
+    resolution: string,
+    countback?: number,
+    currentyCode?: string
   ): Promise<TradeHistory | UdfErrorResponse> {
     try {
       return await databaseAdapter.query_candleStick(
