@@ -44,7 +44,7 @@ interface Stats {
 export class GMWorker {
   private program_id = FLEETPROGRAMID
   private connection: Connection
-  private before_timestamp: string | undefined
+  private before_signature: string | undefined
   private progress_bar: cliProgress.SingleBar
   private stats: Stats = {
     fetched_transactions: 0,
@@ -52,12 +52,13 @@ export class GMWorker {
     inserted_transactions: 0,
   }
 
-  public constructor(endpoint: string = GENESYSGO) {
+  public constructor(endpoint: string = GENESYSGO, before_signature?: string) {
     this.connection = new Connection(endpoint, CONNECTION_CONFIG)
     this.progress_bar = new cliProgress.SingleBar(
       {},
       cliProgress.Presets.shades_classic
     )
+    this.before_signature = before_signature
   }
 
   public async run(mode: Mode | undefined, db_client: DBClient) {
@@ -69,7 +70,7 @@ export class GMWorker {
       }
 
       let signature_list = await this.get_signatures(
-        this.before_timestamp,
+        this.before_signature,
         parseInt(process.env.TXLIMIT ?? "10")
       )
       let transaction_list: ParsedTransactionWithMeta[] = []
@@ -101,10 +102,10 @@ export class GMWorker {
           if (
             signature_list[signature_list.length - 1]?.signature !== undefined
           ) {
-            this.before_timestamp =
+            this.before_signature =
               signature_list[signature_list.length - 1]?.signature
           } else {
-            console.log(`Last logged sync sign: ${this.before_timestamp}`)
+            console.log(`Last logged sync sign: ${this.before_signature}`)
             mode = Mode.OFF
           }
         }

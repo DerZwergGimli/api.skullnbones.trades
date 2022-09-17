@@ -32,7 +32,7 @@ const run_loop = async () => {
 const run_sync = async () => {
   await localStoreInstance.init()
 
-  let worker = new GMWorker(process.env.RPC ?? GENESYSGO)
+  let worker = new GMWorker(process.env.RPC ?? GENESYSGO, process.env.BEFORE)
   await worker.run(Mode.SYNC, getDBClient())
 }
 
