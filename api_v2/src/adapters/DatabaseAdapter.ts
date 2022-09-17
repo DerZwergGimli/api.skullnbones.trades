@@ -34,8 +34,6 @@ class DatabaseAdapter {
     countback?: number,
     currentyCode?: string
   ): Promise<TradeHistory> {
-    const cache_query: string =
-      symbol + resolution + from.toString() + to.toString();
     let trades: TradeHistory = {
       c: [],
       h: [],
@@ -46,44 +44,23 @@ class DatabaseAdapter {
       v: [],
     };
 
-    let cached = await this.cacheCheck(cache_query);
+    const cursor = this.collection?.aggregate(
+      get_history_aggregation(symbol, from, to, resolution)
+    );
 
-    if (cached === undefined || cached === trades) {
-      const cursor = this.collection?.aggregate(
-        get_history_aggregation(symbol, from, to, resolution)
-      );
+    const data = await cursor?.toArray();
 
-      const data = await cursor?.toArray();
+    data?.forEach((d) => {
+      trades.o.push(d.open.toFixed(6));
+      trades.c.push(d.close.toFixed(6));
+      trades.h.push(d.high.toFixed(6));
+      trades.l.push(d.low.toFixed(6));
+      trades.t.push(d.time_last);
+      trades.v.push(d.volume.toFixed(6));
+    });
+    trades.s = "ok";
 
-      data?.forEach((d) => {
-        trades.o.push(d.open.toFixed(6));
-        trades.c.push(d.close.toFixed(6));
-        trades.h.push(d.high.toFixed(6));
-        trades.l.push(d.low.toFixed(6));
-        trades.t.push(d.time_last);
-        trades.v.push(d.volume.toFixed(6));
-      });
-      trades.s = "ok";
-
-      //write data to cache
-      try {
-        await this.redisClient.json.set(
-          cache_query,
-          "$",
-          trades,
-          function (err, result) {
-            if (err) throw err;
-            if (result) console.log(result);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      trades = cached;
-
-      console.log("cached");
-    }
+    //write data to cache
 
     return trades;
   }
@@ -101,4 +78,4 @@ class DatabaseAdapter {
 
 const databaseAdapter = new DatabaseAdapter();
 
-export { databaseAdapter };
+export {databaseAdapter};
