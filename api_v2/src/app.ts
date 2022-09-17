@@ -2,8 +2,15 @@ import express, { Request as ExRequest, Response as ExResponse } from "express";
 import bodyParser from "body-parser";
 import { RegisterRoutes } from "./routes";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 
 export const app = express();
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use(
   bodyParser.urlencoded({

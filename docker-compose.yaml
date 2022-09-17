@@ -11,13 +11,27 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
 
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 100 --loglevel warning #--requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - cache:/data
+
   api:
     build:
       context: .
       dockerfile: Dockerfile.api
     ports:
       - "3000:3000"
+    links:
+      - cache
     environment:
+      REDISHOST: cache
       MONGOURL: mongodb://root:example@mongo:27017
       MONGODB: js_trades
       MONGOCOL: trades_v1
@@ -65,3 +79,6 @@ services:
       driver: "json-file"
       options:
         max-size: "50m"
+volumes:
+  cache:
+    driver: local

@@ -68,7 +68,7 @@ export class UDFController extends Controller {
   }
 
   /**
-   * Retrieves a symbol-info object searched (advanced) all symbols.
+   * Retrieves a history object for a symbols.
    */
   @Get("history")
   public async history(
