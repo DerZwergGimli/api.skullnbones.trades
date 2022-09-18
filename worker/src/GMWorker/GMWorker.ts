@@ -55,8 +55,8 @@ export class GMWorker {
   public constructor(endpoint: string = GENESYSGO, before_signature?: string) {
     this.connection = new Connection(endpoint, CONNECTION_CONFIG)
     this.progress_bar = new cliProgress.SingleBar(
-      {},
-      cliProgress.Presets.shades_classic
+        {},
+        cliProgress.Presets.shades_classic
     )
     this.before_signature = before_signature
   }
@@ -70,8 +70,8 @@ export class GMWorker {
       }
 
       let signature_list = await this.get_signatures(
-        this.before_signature,
-        parseInt(process.env.TXLIMIT ?? "10")
+          this.before_signature,
+          parseInt(process.env.TXLIMIT ?? "10")
       )
       let transaction_list: ParsedTransactionWithMeta[] = []
       this.stats.fetched_transactions = signature_list?.length ?? 0
@@ -95,31 +95,34 @@ export class GMWorker {
           this.progress_bar.stop()
         }
 
+        this.before_signature =
+            signature_list[signature_list.length - 1]?.signature
+
         if (mode == Mode.SYNC) {
           if (signature_list.length <= 1) {
             mode = Mode.OFF
           }
           if (
-            signature_list[signature_list.length - 1]?.signature !== undefined
+              signature_list[signature_list.length - 1]?.signature !== undefined
           ) {
-            this.before_signature =
-              signature_list[signature_list.length - 1]?.signature
+
           } else {
             console.log(`Last logged sync sign: ${this.before_signature}`)
             mode = Mode.OFF
           }
         }
 
+
         transaction_list = this.filter_transactions(transaction_list)
         this.stats.valid_transactions = transaction_list.length
 
         let db_entries: DBEntry[] = []
         transaction_list.forEach((transaction) =>
-          db_entries.push(this.map_transaction(transaction))
+            db_entries.push(this.map_transaction(transaction))
         )
 
         this.stats.inserted_transactions =
-          (await db_client.insert_data(db_entries)) ?? 0
+            (await db_client.insert_data(db_entries)) ?? 0
 
         this.printStats(mode?.toString() ?? "none")
       }
@@ -129,11 +132,11 @@ export class GMWorker {
   }
 
   public async get_parsedTransaction(
-    signature: ConfirmedSignatureInfo
+      signature: ConfirmedSignatureInfo
   ): Promise<ParsedTransactionWithMeta | null> {
     return await this.connection.getParsedTransaction(
-      signature.signature,
-      "finalized"
+        signature.signature,
+        "finalized"
     )
   }
 
@@ -142,52 +145,52 @@ export class GMWorker {
   }
 
   public filter_transactions(
-    transactions: ParsedTransactionWithMeta[]
+      transactions: ParsedTransactionWithMeta[]
   ): ParsedTransactionWithMeta[] {
     return transactions.filter((transaction) =>
-      transaction?.meta?.logMessages?.some((log) =>
-        log.includes("ProcessExchange")
-      )
+        transaction?.meta?.logMessages?.some((log) =>
+            log.includes("ProcessExchange")
+        )
     )
   }
 
   public map_transaction(transaction: ParsedTransactionWithMeta): DBEntry {
     let parentInstructions: solana_instruction.ParentInstruction[] = []
     const temp = transaction?.meta?.innerInstructions?.filter(
-      (ins) => ins.instructions.length === 3
+        (ins) => ins.instructions.length === 3
     )
 
     temp?.forEach((i) => {
       parentInstructions.push(
-        solana_instruction.Convert.toInnerInstruction(JSON.stringify(i, null))
+          solana_instruction.Convert.toInnerInstruction(JSON.stringify(i, null))
       )
     })
 
     return db.DBConverter.toDBEntry(
-      transaction?.blockTime ?? 0,
-      transaction?.slot ?? 0,
-      transaction?.transaction?.signatures[0],
-      parentInstructions
+        transaction?.blockTime ?? 0,
+        transaction?.slot ?? 0,
+        transaction?.transaction?.signatures[0],
+        parentInstructions
     )
   }
 
   private async get_signatures(
-    before?: string,
-    limit?: number
+      before?: string,
+      limit?: number
   ): Promise<ConfirmedSignatureInfo[]> {
     return await this.connection.getSignaturesForAddress(
-      new PublicKey(this.program_id),
-      {
-        limit,
-        before,
-      },
-      "finalized"
+        new PublicKey(this.program_id),
+        {
+          limit,
+          before,
+        },
+        "finalized"
     )
   }
 
   private printStats(mode: string) {
     console.log(
-      `Mode: ${mode}\t Fetched: ${this.stats.fetched_transactions}\t Trades: ${this.stats.valid_transactions}\t Inserted: ${this.stats.inserted_transactions}`
+        `Mode: ${mode}\t Fetched: ${this.stats.fetched_transactions}\t Trades: ${this.stats.valid_transactions}\t Inserted: ${this.stats.inserted_transactions}`
     )
     console.log(`Last Signature = ${this.before_signature}`)
   }
