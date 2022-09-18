@@ -189,5 +189,6 @@ export class GMWorker {
     console.log(
       `Mode: ${mode}\t Fetched: ${this.stats.fetched_transactions}\t Trades: ${this.stats.valid_transactions}\t Inserted: ${this.stats.inserted_transactions}`
     )
+    console.log(`Last Signature = ${this.before_signature}`)
   }
 }
